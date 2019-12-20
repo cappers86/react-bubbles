@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosWithAuth from '../utils/axiosWithAuth';
+
 
 const initialColor = {
   color: "",
@@ -18,15 +19,34 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
+      axiosWithAuth()
+        .put(`/colors/${colorToEdit.id}`, colorToEdit)
+        .then(result =>{
+          updateColors([
+            ...colors.filter
+            (color => color.id !== colorToEdit.id),
+            result.data]);
+            setEditing(false);
+        })
+
+        .catch(error =>
+          console.log('PUT color list error', error));
+        
+
   };
 
-  const deleteColor = color => {
+  const deleteColor = deleteColor => {
     // make a delete request to delete this color
+      console.log('delete color')
+      axiosWithAuth()
+        .delete(`http://localhost:5000/api/colors/${deleteColor.id}`)
+        .then(()  =>  {
+            updateColors(colors.filter(color => color.id !== deleteColor.id))
+        })
+        .catch( error => {
+          console.log('delete color error', error)
+        })
   };
-
   return (
     <div className="colors-wrap">
       <p>colors</p>
@@ -37,6 +57,7 @@ const ColorList = ({ colors, updateColors }) => {
               <span className="delete" onClick={e => {
                     e.stopPropagation();
                     deleteColor(color)
+                    
                   }
                 }>
                   x
@@ -77,6 +98,7 @@ const ColorList = ({ colors, updateColors }) => {
           <div className="button-row">
             <button type="submit">save</button>
             <button onClick={() => setEditing(false)}>cancel</button>
+            <button onClick={() => deleteColor}>Delete color</button>
           </div>
         </form>
       )}
