@@ -20,12 +20,13 @@ const ColorList = ({ colors, updateColors }) => {
   const saveEdit = e => {
     e.preventDefault();
       axiosWithAuth()
-        .put(`/colors.${colorToEdit.id}`, colorToEdit)
+        .put(`/colors/${colorToEdit.id}`, colorToEdit)
         .then(result =>{
           updateColors([
             ...colors.filter
             (color => color.id !== colorToEdit.id),
             result.data]);
+            setEditing(false);
         })
 
         .catch(error =>
@@ -34,17 +35,17 @@ const ColorList = ({ colors, updateColors }) => {
 
   };
 
-  const deleteColor = color => {
+  const deleteColor = Color => {
     // make a delete request to delete this color
-  console.log('deleted colors')
-  axiosWithAuth()
-    .delete(`http://localhost:5000/api/colors/${deleteColor.id}`)
-    .then(()  =>  {
-      updateColors(colors.filter(color => color.id !== deleteColor.id))
-     })
-    .catch( error => {
-      console.log('delete color error', error)
-    })
+      console.log('delete color')
+      axiosWithAuth()
+        .delete(`http://localhost:5000/api/colors/${Color.id}`)
+        .then(()  =>  {
+            updateColors(colors.filter(color => color.id !== Color.id))
+        })
+        .catch( error => {
+          console.log('delete color error', error)
+        })
   };
 
   return (
@@ -56,7 +57,7 @@ const ColorList = ({ colors, updateColors }) => {
             <span>
               <span className="delete" onClick={e => {
                     e.stopPropagation();
-                    deleteColor(color)
+                    deleteColor(color.id)
                   }
                 }>
                   x
