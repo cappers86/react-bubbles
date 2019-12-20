@@ -21,7 +21,7 @@ const BubblePage = () => {
       .catch(error => {
         console.log('Catch from bubbles color call error', error)
       })
-  })
+  }, [])
 
   return (
     <>
