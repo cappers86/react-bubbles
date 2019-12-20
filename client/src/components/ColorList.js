@@ -97,6 +97,7 @@ const ColorList = ({ colors, updateColors }) => {
           <div className="button-row">
             <button type="submit">save</button>
             <button onClick={() => setEditing(false)}>cancel</button>
+            <button onClick={() => deleteColor}>Delete color</button>
           </div>
         </form>
       )}
